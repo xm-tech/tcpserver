@@ -13,13 +13,18 @@ type connHanlder struct {
 	conn *wrappedConn
 }
 
-// 主要的网络事件循环
+// 单 TCP 连接网络事件循环处理逻辑
 func (ch *connHanlder) Handle() {
+	// business logic TODO
+	fmt.Println("connHanlder.Handle")
 	go func() {
 		defer ch.conn.Close()
-
-		// business logic
-		fmt.Println("connHanlder.Handle")
+		for {
+			buff := make([]byte, 512)
+			// 此处可以有解码器处理
+			ch.conn.Read(buff)
+			fmt.Println(string(buff))
+		}
 	}()
 }
 
