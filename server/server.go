@@ -33,7 +33,7 @@ type wrappedConn struct {
 }
 
 func (wc *wrappedConn) Close() {
-	wc.Close()
+	wc.Conn.Close()
 }
 
 func (self *Server) Exec() {
