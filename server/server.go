@@ -20,9 +20,11 @@ func (ch *connHanlder) Handle() {
 	go func() {
 		defer ch.conn.Close()
 		for {
+			// 读数据
 			buff := make([]byte, 512)
-			// 此处可以有解码器处理
 			ch.conn.Read(buff)
+
+			// 解码
 			fmt.Println(string(buff))
 		}
 	}()
