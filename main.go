@@ -1,23 +1,23 @@
 package main
 
 import (
-	"math/rand"
 	"os"
 	"os/signal"
-	"runtime"
-	"time"
 
-	"github.com/xm-tech/tcpserver/server"
+	"github.com/xm-tech/tcpserver/cmd"
 )
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	rand.Seed(time.Now().UnixNano())
+	login := &cmd.Login{}
+	login.Exec("hello", "^golang")
 
-	go signalHandler()
+	// runtime.GOMAXPROCS(runtime.NumCPU())
+	// rand.Seed(time.Now().UnixNano())
 
-	var s server.Server
-	s.Exec()
+	// go signalHandler()
+
+	// var s server.Server
+	// s.Exec()
 }
 
 func signalHandler() {
