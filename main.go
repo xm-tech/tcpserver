@@ -1,23 +1,36 @@
 package main
 
 import (
+	"fmt"
+	"math/rand"
 	"os"
 	"os/signal"
+	"runtime"
+	"time"
 
 	"github.com/xm-tech/tcpserver/cmd"
 )
 
+var Commands *cmd.Commands
+
+func init() {
+	fmt.Println("Server init...")
+	Commands = cmd.NewCommands()
+	Commands.AddCommand(100, &cmd.Login{})
+	Commands.AddCommand(101, &cmd.Echo{})
+}
+
 func main() {
-	login := &cmd.Login{}
-	login.Exec("hello", "^golang")
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	rand.Seed(time.Now().UnixNano())
 
-	// runtime.GOMAXPROCS(runtime.NumCPU())
-	// rand.Seed(time.Now().UnixNano())
+	login := Commands.GetCommand(100)
+	login.Exec("login")
 
-	// go signalHandler()
+	echo := Commands.GetCommand(101)
+	echo.Exec("hi")
 
-	// var s server.Server
-	// s.Exec()
+	go signalHandler()
 }
 
 func signalHandler() {
