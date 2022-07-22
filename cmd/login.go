@@ -1,6 +1,8 @@
 package cmd
 
-import "fmt"
+import (
+	"log"
+)
 
 // a implement of Command
 type Login struct {
@@ -8,12 +10,12 @@ type Login struct {
 }
 
 func (self *Login) Exec(data ...interface{}) interface{} {
-	fmt.Println("Login.Exec,data=", data)
+	log.Println("Login.Exec,data=", data)
 	return nil
 }
 
 func (self *Login) OnErr(err error) {
-	fmt.Println("login err:", err.Error())
+	log.Println("login err:", err.Error())
 }
 
 func (self *Login) Name() string {

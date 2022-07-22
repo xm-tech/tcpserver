@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"os/signal"
@@ -14,7 +14,7 @@ import (
 var Commands *cmd.Commands
 
 func init() {
-	fmt.Println("Server init...")
+	log.Println("Server init...")
 	Commands = cmd.NewCommands()
 	Commands.AddCommand(100, &cmd.Login{})
 	Commands.AddCommand(101, &cmd.Echo{})

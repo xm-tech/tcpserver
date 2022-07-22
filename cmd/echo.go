@@ -1,13 +1,13 @@
 package cmd
 
-import "fmt"
+import "log"
 
 type Echo struct {
 	BaseCommand
 }
 
 func (self *Echo) Exec(data ...interface{}) interface{} {
-	fmt.Println("Echo.Exec,data=", data)
+	log.Println("Echo.Exec,data=", data)
 	return data
 }
 
