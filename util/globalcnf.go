@@ -1,14 +1,14 @@
 package util
 
-type GlobalObj struct {
+type globalCnf struct {
 	WorkerPoolSize   uint32 // Worker 数量
 	MaxWorkerTaskLen uint32 // 单 Worker 对应任务队列的最大长度, 也即消息积压最多条数
 }
 
-var GlobalConf *GlobalObj
+var GlobalCnf *globalCnf
 
 func init() {
-	GlobalConf = &GlobalObj{
+	GlobalCnf = &globalCnf{
 		WorkerPoolSize:   20,
 		MaxWorkerTaskLen: 1024,
 	}
