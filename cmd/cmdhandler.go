@@ -12,8 +12,8 @@ type CmdHandler struct {
 
 func NewCmdHandler() *CmdHandler {
 	return &CmdHandler{
-		WorkerPoolSize: util.GlobalConf.WorkerPoolSize,
-		TaskQuene:      make([]chan iface.IRequest, util.GlobalConf.WorkerPoolSize),
+		WorkerPoolSize: util.GlobalCnf.WorkerPoolSize,
+		TaskQuene:      make([]chan iface.IRequest, util.GlobalCnf.WorkerPoolSize),
 	}
 }
 
@@ -36,7 +36,7 @@ func (self *CmdHandler) StartWorker(workerID int, taskQuene chan iface.IRequest)
 func (self *CmdHandler) Run() {
 	for i := 0; i < int(self.WorkerPoolSize); i++ {
 		// 一个 Worker 被启动，给当前Worker对应的任务队列开辟空间
-		self.TaskQuene[i] = make(chan iface.IRequest, util.GlobalConf.MaxWorkerTaskLen)
+		self.TaskQuene[i] = make(chan iface.IRequest, util.GlobalCnf.MaxWorkerTaskLen)
 		go self.StartWorker(i, self.TaskQuene[i])
 	}
 }

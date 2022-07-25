@@ -39,19 +39,20 @@ func (self *Server) Start() {
 	// 监听服务端套接字
 	listener, err := net.ListenTCP(self.IPVersion, tcpAddr)
 	if err != nil {
-		log.Fatalf("Server Start Fail, ListenTcp Error:%s", err)
+		log.Fatalf("Server.Start fail, ListenTcp Error:%s", err)
 	}
 
-	log.Println("Server.Start succ,tcpAddr=", tcpAddr)
+	log.Println("Server.Start,listen succ,tcpAddr=", tcpAddr)
 
 	// 阻塞等待客户端链接，处理链接业务
 	for {
 		conn, err := listener.AcceptTCP()
 		if err != nil {
-			log.Println("Server Start fail, AcceptTCP Error:", err)
+			log.Println("Server.Start fail, AcceptTCP Error:", err)
+			panic(err)
 		}
 
-		log.Println("Server.Start ListenTcp Succ, conn=", conn)
+		log.Println("Server.Start, accepted one conn:", conn)
 
 		go func() {
 			for {
