@@ -2,11 +2,13 @@ package cmd
 
 import (
 	"log"
+
+	"github.com/xm-tech/tcpserver/cmd"
 )
 
 // a implement of Command
 type Login struct {
-	BaseCommand
+	cmd.BaseCommand
 }
 
 func (self *Login) Exec(data ...interface{}) interface{} {

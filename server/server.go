@@ -2,55 +2,87 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net"
+
+	"github.com/xm-tech/tcpserver/iface"
 )
 
+// implements the IServer interface
 type Server struct {
-	listener net.Listener
+	IPVersion string
+
+	Name string
+
+	IP string
+
+	Port int
 }
 
-type connHanlder struct {
-	conn *wrappedConn
-}
-
-// 单 TCP 连接网络事件循环处理逻辑
-func (ch *connHanlder) Handle() {
-	// business logic TODO
-	fmt.Println("connHanlder.Handle")
-	go func() {
-		defer ch.conn.Close()
-		for {
-			// 读数据
-			buff := make([]byte, 512)
-			ch.conn.Read(buff)
-
-			// 解码
-			fmt.Println(string(buff))
-		}
-	}()
-}
-
-type wrappedConn struct {
-	net.Conn
-}
-
-func (wc *wrappedConn) Close() {
-	wc.Conn.Close()
-}
-
-func (self *Server) Exec() {
-	self.Listen()
-}
-
-func (self *Server) Listen() {
-	for {
-		conn, err := self.listener.Accept()
-		if err != nil {
-			panic(err)
-		}
-		ch := connHanlder{
-			conn: &wrappedConn{Conn: conn},
-		}
-		ch.Handle()
+func NewServer() iface.IServer {
+	s := &Server{
+		IPVersion: "tcp4",
+		Name:      "TcpServer",
+		IP:        "127.0.0.1",
+		Port:      9999,
 	}
+	return s
+}
+
+func (self *Server) Start() {
+	// 获取1 TCP 地址
+	tcpAddr, err := net.ResolveTCPAddr(self.IPVersion, fmt.Sprintf("%s:%d", self.IP, self.Port))
+	if err != nil {
+		log.Fatalf("Server Start Fail,Resolve Tcp Addr Error:%s", err)
+	}
+
+	// 监听服务端套接字
+	listener, err := net.ListenTCP(self.IPVersion, tcpAddr)
+	if err != nil {
+		log.Fatalf("Server Start Fail, ListenTcp Error:%s", err)
+	}
+
+	log.Println("Server.Start succ,tcpAddr=", tcpAddr)
+
+	// 阻塞等待客户端链接，处理链接业务
+	for {
+		conn, err := listener.AcceptTCP()
+		if err != nil {
+			log.Println("Server Start fail, AcceptTCP Error:", err)
+		}
+
+		log.Println("Server.Start ListenTcp Succ, conn=", conn)
+
+		go func() {
+			for {
+				// a simple echo
+				buf := make([]byte, 512)
+				cnt, err := conn.Read(buf)
+				if err != nil {
+					log.Println("conn Read Fail,err=", err)
+					conn.Close()
+					break
+				}
+
+				log.Println("Read data:", string(buf), ",cnt:", cnt, " from client:", conn)
+
+				_, err = conn.Write(buf[:cnt])
+				if err != nil {
+					log.Println("conn Write fail,err=", err)
+					conn.Close()
+					break
+				}
+			}
+		}()
+	}
+}
+
+func (self *Server) Stop() {
+
+}
+
+func (self *Server) Run() {
+	go self.Start()
+	// TODO 做些服务启动后的额外动作
+	select {}
 }

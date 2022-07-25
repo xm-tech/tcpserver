@@ -11,23 +11,18 @@ import (
 	"github.com/xm-tech/tcpserver/cmd"
 )
 
-var Commands *cmd.Commands
-
 func init() {
 	log.Println("Server init...")
-	Commands = cmd.NewCommands()
-	Commands.AddCommand(100, &cmd.Login{})
-	Commands.AddCommand(101, &cmd.Echo{})
 }
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	rand.Seed(time.Now().UnixNano())
 
-	login := Commands.GetCommand(100)
+	login := cmd.Cmds.GetCommand(100)
 	login.Exec("login")
 
-	echo := Commands.GetCommand(101)
+	echo := cmd.Cmds.GetCommand(101)
 	echo.Exec("hi")
 
 	go signalHandler()

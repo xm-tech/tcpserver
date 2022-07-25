@@ -1,9 +1,13 @@
 package cmd
 
-import "log"
+import (
+	"log"
+
+	"github.com/xm-tech/tcpserver/cmd"
+)
 
 type Echo struct {
-	BaseCommand
+	cmd.BaseCommand
 }
 
 func (self *Echo) Exec(data ...interface{}) interface{} {
